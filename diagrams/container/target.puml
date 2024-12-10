@@ -1,0 +1,40 @@
+@startuml
+title FitLife Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!include <cloudinsight/kafka>
+!include <cloudinsight/java>
+
+Person(user, "Пользователь", "Пользователь системы")
+System(WarmHouseSystem, "Система Теплый Дом", "")
+
+Container_Boundary(WarmHouseSystem, "Система Теплый Дом") {
+  Container(WebApp, "Web App", "TypeScript, React", "Предоставляет функциональность управления датчиками и просмотра их состояния")
+  Container(MobileApp, "Mobile App", "Kotlin", "Предоставляет функциональность чтения информации с датчиков")
+  Container(ApiGateway, "<$java>\n API Gateway", "Java, Spring", "Обрабатывает все запросы пользователя")
+  Container(Receiver, "<$java>\n Receiver", "Java", "Получает телематику с устройств")
+  Container(SensorsService, "<$java>\n Sensors Service", "Java, Spring", "Управляет датчиками")
+  Container(TelematicService, "<$java>\n Telematic Service", "Java, Spring", "Управляет телематическими данными")
+  queue "<$kafka> currents" as CurrentsQueue
+  queue "<$kafka> sensor_updates" as SensorUpdatesQueue
+}
+
+System_Ext(sensor, "Устройста", "Различные датчики и устройства умного дома")
+
+Rel(user, WebApp, "Использует систему")
+Rel(user, MobileApp, "Использует систему")
+Rel(WebApp, ApiGateway, "Вызывает API")
+Rel(MobileApp, ApiGateway, "Вызывает API")
+Rel(sensor, Receiver, "Публикует телематические данные")
+Rel(ApiGateway, SensorsService, "Получает данные с датчиков")
+Rel(ApiGateway, TelematicService, "Запрашивает данные датчиков")
+Rel(SensorsService, sensor, "Конфигурация датчиков")
+
+Receiver -> CurrentsQueue: "Публикует телематические данные"
+CurrentsQueue -> TelematicService: "Читает телематические данные"
+ApiGateway -> SensorUpdatesQueue: "Публикует задачи на изменение конфигурации сенсора"
+SensorUpdatesQueue -> SensorsService: "Читает задачи на изменение конфигурации сенсора"
+
+@enduml
