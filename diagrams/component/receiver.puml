@@ -1,0 +1,29 @@
+@startuml
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!include <cloudinsight/kafka>
+!include <cloudinsight/java>
+
+System(WarmHouseSystem, "Система Теплый Дом", "")
+
+System_Boundary(WarmHouseSystem, "Система Теплый Дом") {
+  queue "<$kafka> currents" as CurrentsQueue
+  
+  Container(Receiver, "<$java>\n Receiver", "Java", "Получает телематику с устройств") {
+    Component(HandlerComponent, "Handler", "Обрабатывает сообщения с устройств")
+    Component(PublisherComponent, "Publisher", "Публикует телематику в очередь")
+  }
+
+}
+
+System_Ext(sensor, "Устройста", "Различные датчики и устройства умного дома")
+
+Rel(sensor, HandlerComponent, "Публикует телематические данные")
+Rel(HandlerComponent, PublisherComponent, "Использует")
+
+PublisherComponent -> CurrentsQueue: "Публикует телематические данные"
+
+@enduml
