@@ -1,0 +1,34 @@
+@startuml
+title FitLife Membership Management Code Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+class App {
+   +Store store
+   +Queue queue
+   +void init()
+}
+
+class Sensor {
+   +String imei
+   +String value
+   +String sensorType
+}
+
+class Store {
+   +String dbURI
+   +void save(Sensor sensor)
+   +void init()
+}
+
+class Queue {
+   +Sensor next()
+   +Bool hasNext()
+}
+
+App "1" -- "1" Queue : has
+App "1" -- "1" Store : has
+
+@enduml
