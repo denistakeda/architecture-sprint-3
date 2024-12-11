@@ -1,0 +1,52 @@
+@startuml
+
+skinparam linetype ortho
+
+entity Sensor {
+   id : number <<generated>>
+   --
+   name : string
+   sensor_type : number
+}
+
+entity SensorType {
+   id : number <<generated>>
+   --
+   unit : string
+   calibrationTable : json
+   configuration : json
+}
+
+entity Message {
+   id : number <<generated>>
+   --
+   sensor_id : number
+   value : string
+}
+
+entity User {
+   id : number <<generated>>
+   --
+   name : string
+}
+
+Sensor ||--|| SensorType
+Message }|--|| Sensor
+User ||--|{ Sensor
+
+
+
+
+'e01 }|..|| e02
+'e01 }|..|| e03
+
+'e02 }|..|| e05
+
+'e02 }|..|| e04
+'e03 }|..|| e04
+
+'e02 }|..|| e06
+'e03 }|..|| e06
+
+
+@enduml
