@@ -14,7 +14,7 @@ Container_Boundary(WarmHouseSystem, "Система Теплый Дом") {
   Container(ApiGateway, "<$java>\n API Gateway", "Java, Spring", "Обрабатывает все запросы пользователя")
   Container(Receiver, "<$java>\n Receiver", "Java", "Получает телематику с устройств")
   Container(SensorsService, "<$java>\n Sensors Service", "Java, Spring", "Управляет датчиками")
-  Container(TelematicService, "<$java>\n Telematic Service", "Java, Spring", "Управляет телематическими данными")
+  Container(TelemetryService, "<$java>\n Telemetry Service", "Java, Spring", "Управляет телематическими данными")
   queue "<$kafka> currents" as CurrentsQueue
   queue "<$kafka> sensor_updates" as SensorUpdatesQueue
 }
@@ -27,11 +27,11 @@ Rel(WebApp, ApiGateway, "Вызывает API")
 Rel(MobileApp, ApiGateway, "Вызывает API")
 Rel(sensor, Receiver, "Публикует телематические данные")
 Rel(ApiGateway, SensorsService, "Получает данные с датчиков")
-Rel(ApiGateway, TelematicService, "Запрашивает данные датчиков")
+Rel(ApiGateway, TelemetryService, "Запрашивает данные датчиков")
 Rel(SensorsService, sensor, "Конфигурация датчиков")
 
 Receiver -> CurrentsQueue: "Публикует телематические данные"
-CurrentsQueue -> TelematicService: "Читает телематические данные"
+CurrentsQueue -> TelemetryService: "Читает телематические данные"
 ApiGateway -> SensorUpdatesQueue: "Публикует задачи на изменение конфигурации сенсора"
 SensorUpdatesQueue -> SensorsService: "Читает задачи на изменение конфигурации сенсора"
 

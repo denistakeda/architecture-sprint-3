@@ -13,7 +13,7 @@ System_Boundary(WarmHouseSystem, "Система Теплый Дом") {
   Container(WebApp, "Web App", "TypeScript, React", "Предоставляет функциональность управления датчиками и просмотра их состояния")
   Container(MobileApp, "Mobile App", "Kotlin", "Предоставляет функциональность чтения информации с датчиков")
   Container(SensorsService, "<$java>\n Sensors Service", "Java, Spring", "Управляет датчиками")
-  Container(TelematicService, "<$java>\n Telematic Service", "Java, Spring", "Управляет телематическими данными")
+  Container(TelemetryService, "<$java>\n Telemetry Service", "Java, Spring", "Управляет телематическими данными")
   queue "<$kafka> sensor_updates" as SensorUpdatesQueue
   
   Container(ApiGateway, "<$java>\n API Gateway", "Java, Spring", "Обрабатывает все запросы пользователя") {
@@ -28,7 +28,7 @@ Rel(WebApp, APIComponent, "Вызывает API")
 Rel(MobileApp, APIComponent, "Вызывает API")
 Rel(APIComponent, HTTPClientComponent, "Вызывает")
 Rel(HTTPClientComponent, SensorsService, "Получает данные с датчиков")
-Rel(HTTPClientComponent, TelematicService, "Запрашивает данные датчиков")
+Rel(HTTPClientComponent, TelemetryService, "Запрашивает данные датчиков")
 Rel(APIComponent, QueueHandlerComponent, "Использует")
 
 QueueHandlerComponent -> SensorUpdatesQueue: "Публикует задачи на изменение конфигурации сенсора"

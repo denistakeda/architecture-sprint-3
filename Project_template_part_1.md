@@ -61,16 +61,16 @@
 
 ![диаграмма](/diagrams/component/receiver.png)
 
-## telematic_service
-[код](/diagrams/component/telematic_service.puml)
+## telemetry_service
+[код](/diagrams/component/telemetry_service.puml)
 
-![диаграмма](/diagrams/component/telematic_service.png)
+![диаграмма](/diagrams/component/telemetry_service.png)
 
 **Диаграмма кода (Code)**
 
-[telematic_service](/diagrams/code/telematic.puml)
+[telemetry_service](/diagrams/code/telemetry.puml)
 
-![диаграмма](/diagrams/code/telematic.png)
+![диаграмма](/diagrams/code/telemetry.png)
 
 # Задание 3. Разработка ER-диаграммы
 

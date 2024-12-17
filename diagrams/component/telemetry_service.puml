@@ -13,7 +13,7 @@ System_Boundary(WarmHouseSystem, "Система Теплый Дом") {
   Container(ApiGateway, "<$java>\n API Gateway", "Java, Spring", "Обрабатывает все запросы пользователя")
   queue "<$kafka> currents" as CurrentsQueue
   
-  Container(TelematicService, "<$java>\n Telematic Service", "Java, Spring", "Управляет телематическими данными") {
+  Container(TelemetryService, "<$java>\n Telemetry Service", "Java, Spring", "Управляет телематическими данными") {
     Component(QueueHandler, "Queue Handler", "Обрабатывает очередь")
     Component(APIHandler, "API Handler", "Обрабатывает API запросы")
     database ClickHouse
