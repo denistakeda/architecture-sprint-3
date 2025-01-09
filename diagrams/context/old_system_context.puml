@@ -1,0 +1,18 @@
+@startuml
+title "Система до модернизации"
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "Пользователь", "Пользователь системы")
+System(WarmHouseSystem, "Система Теплый Дом", "Система собирает информацию с устройств и управляет ими")
+
+System_Ext(sensor, "Устройста", "Различные датчики и устройства умного дома")
+queue
+
+Rel(user, WarmHouseSystem, "Получает значения с датчиков, контролирует и настраивает устройства")
+Rel(sensor, WarmHouseSystem, "Передает телематическую информацию")
+Rel(WarmHouseSystem, sensor, "Управляет устройствами")
+
+@enduml

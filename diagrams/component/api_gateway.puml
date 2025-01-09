@@ -1,0 +1,36 @@
+@startuml
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!include <cloudinsight/kafka>
+!include <cloudinsight/java>
+
+System(WarmHouseSystem, "Система Теплый Дом", "")
+
+System_Boundary(WarmHouseSystem, "Система Теплый Дом") {
+  Container(WebApp, "Web App", "TypeScript, React", "Предоставляет функциональность управления датчиками и просмотра их состояния")
+  Container(MobileApp, "Mobile App", "Kotlin", "Предоставляет функциональность чтения информации с датчиков")
+  Container(SensorsService, "<$java>\n Sensors Service", "Java, Spring", "Управляет датчиками")
+  Container(TelemetryService, "<$java>\n Telemetry Service", "Java, Spring", "Управляет телематическими данными")
+  queue "<$kafka> sensor_updates" as SensorUpdatesQueue
+  
+  Container(ApiGateway, "<$java>\n API Gateway", "Java, Spring", "Обрабатывает все запросы пользователя") {
+    Component(APIComponent, "API", "Обрабатывает все API запросы")
+    Component(HTTPClientComponent, "HTTP Client", "Вызывает API внутренних сервисов")
+    Component(QueueHandlerComponent, "Queue Handler", "Публикует задачи в очередь")
+  }
+}
+
+
+Rel(WebApp, APIComponent, "Вызывает API")
+Rel(MobileApp, APIComponent, "Вызывает API")
+Rel(APIComponent, HTTPClientComponent, "Вызывает")
+Rel(HTTPClientComponent, SensorsService, "Получает данные с датчиков")
+Rel(HTTPClientComponent, TelemetryService, "Запрашивает данные датчиков")
+Rel(APIComponent, QueueHandlerComponent, "Использует")
+
+QueueHandlerComponent -> SensorUpdatesQueue: "Публикует задачи на изменение конфигурации сенсора"
+
+@enduml

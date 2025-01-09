@@ -1,0 +1,30 @@
+@startuml
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!include <cloudinsight/kafka>
+!include <cloudinsight/java>
+
+System(WarmHouseSystem, "Система Теплый Дом", "")
+
+System_Boundary(WarmHouseSystem, "Система Теплый Дом") {
+  Container(ApiGateway, "<$java>\n API Gateway", "Java, Spring", "Обрабатывает все запросы пользователя")
+  queue "<$kafka> currents" as CurrentsQueue
+  
+  Container(TelemetryService, "<$java>\n Telemetry Service", "Java, Spring", "Управляет телематическими данными") {
+    Component(QueueHandler, "Queue Handler", "Обрабатывает очередь")
+    Component(APIHandler, "API Handler", "Обрабатывает API запросы")
+    database ClickHouse
+  }
+}
+
+
+Rel(ApiGateway, APIHandler, "Запрашивает данные датчиков")
+
+APIHandler -> ClickHouse: "Запрашивает телематические данные"
+CurrentsQueue -> QueueHandler: "Читает очередь телематических данных"
+QueueHandler -> ClickHouse: "Публикует данные в базу"
+
+@enduml
